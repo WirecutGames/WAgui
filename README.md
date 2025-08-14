@@ -1,12 +1,9 @@
-Agui
+WAgui
 ====
 
-C++ GUI API Aimed at Games
+Wirecut's fork of Agui, used in our games.
 
-Agui is an Object Oriented Graphical User Interface library for games written in C++. It has full UTF8 Unicode support and is back end independent. Comes with many widgets by default. 
-
-Agui uses the CMAKE build system.
-
-Currently Allegro5 and SFML2 backends are implemented and supported.
-
-Agui is used in Stemwater Spades https://github.com/jmasterx/StemwaterSpades and the popular commercial game Factorio: [Factorio Credits](https://www.factorio.com/game/about)
+Backends:
+ - Allegro5
+ - SFML2
+ - SDL3 *(New!)*

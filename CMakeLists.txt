@@ -4,9 +4,11 @@ project(agui)
 
 OPTION(WANT_SHARED "Build agui and the backend as a shared library" OFF) 
 
-OPTION(WANT_ALLEGRO5_BACKEND "Build the Allegro 5 backend" ON) 
+OPTION(WANT_ALLEGRO5_BACKEND "Build the Allegro 5 backend" OFF) 
 
 OPTION(WANT_SFML2_BACKEND "Build the SFML2 backend" OFF) 
+
+OPTION(WANT_SDL3_BACKEND "Build the SDL3 backend" ON) 
 
 if(APPLE AND NOT IPHONE)
     set(MACOSX 1)
@@ -121,7 +123,16 @@ set(SFML2_BACKEND_SOURCES
 	src/Agui/Backends/SFML2/SFML2Image.cpp
 	src/Agui/Backends/SFML2/SFML2ImageLoader.cpp
 	src/Agui/Backends/SFML2/SFML2Input.cpp
-	)
+)
+
+set(SDL3_BACKEND_SOURCES
+	src/Agui/Backends/SDL3/SDL3Font.cpp
+	src/Agui/Backends/SDL3/SDL3FontLoader.cpp
+	src/Agui/Backends/SDL3/SDL3Graphics.cpp
+	src/Agui/Backends/SDL3/SDL3Image.cpp
+	src/Agui/Backends/SDL3/SDL3ImageLoader.cpp
+	src/Agui/Backends/SDL3/SDL3Input.cpp
+)
 
 if(WANT_SHARED)
   add_library(agui SHARED ${AGUI_SOURCES})
@@ -135,16 +146,22 @@ if(WANT_SHARED)
   
   if(WANT_ALLEGRO5_BACKEND)
     add_library(agui_allegro5 SHARED ${ALLEGRO5_BACKEND_SOURCES})
-  set_target_properties(agui_allegro5 PROPERTIES DEFINE_SYMBOL "AGUI_BACKEND_BUILD")
-  target_link_libraries (agui_allegro5 agui)
+  	set_target_properties(agui_allegro5 PROPERTIES DEFINE_SYMBOL "AGUI_BACKEND_BUILD")
+  	btarget_link_libraries (agui_allegro5 agui)
   endif()
-  
-    if(WANT_SFML2_BACKEND)
+
+  if(WANT_SFML2_BACKEND)
     add_library(agui_sfml2 SHARED ${SFML2_BACKEND_SOURCES})
-  set_target_properties(agui_sfml2 PROPERTIES DEFINE_SYMBOL "AGUI_BACKEND_BUILD")
-  target_link_libraries (agui_sfml2 agui)
+  	set_target_properties(agui_sfml2 PROPERTIES DEFINE_SYMBOL "AGUI_BACKEND_BUILD")
+  	target_link_libraries (agui_sfml2 agui)
   endif()
   
+  if(WANT_SDL3_BACKEND)
+    add_library(agui_sdl3 SHARED ${SDL3_BACKEND_SOURCES})
+  	set_target_properties(agui_sdl3 PROPERTIES DEFINE_SYMBOL "AGUI_BACKEND_BUILD")
+  	target_link_libraries (agui_sdl3 agui)
+  endif()
+
 else()
   add_library(agui STATIC ${AGUI_SOURCES})
   target_include_directories(agui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -161,6 +178,11 @@ else()
     if(WANT_SFML2_BACKEND)
     add_library(agui_sfml2 STATIC ${SFML2_BACKEND_SOURCES})
     set_target_properties(agui_sfml2 PROPERTIES COMPILE_DEFINITIONS "SFML_STATIC")
+  endif()
+
+  	if(WANT_SDL3_BACKEND)
+    add_library(agui_sdl3 STATIC ${SFML2_BACKEND_SOURCES})
+    set_target_properties(agui_sdl3 PROPERTIES COMPILE_DEFINITIONS "SDL3_STATIC")
   endif()
 endif()
  
